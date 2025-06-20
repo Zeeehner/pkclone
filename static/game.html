@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Parallel Kingdom Map</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+  <div id="map" style="height: 100vh;"></div>
+  <script>
+    const map = L.map('map').setView([52.52, 13.405], 14);
+
+    const staticCircle = L.circle([52.52, 13.405], {
+      radius: 1000,
+      color: 'blue',
+      fillColor: '#3f3fff',
+      fillOpacity: 0.2
+    }).addTo(map);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+    }).addTo(map);
+
+    async function loadObjects() {
+      const res = await fetch('/objects');
+      const objects = await res.json();
+
+      for (let obj of objects) {
+        const marker = L.marker([obj.lat, obj.lon]).addTo(map);
+        marker.bindPopup(`${obj.name}<br>${obj.description}`);
+
+        if (obj.health !== undefined) {
+          marker.on('click', async () => {
+            const res = await fetch(`/attack?monster_id=${obj.id}`, { method: 'POST' });
+            const data = await res.json();
+            alert(data.message);
+            location.reload();
+          });
+        } else if (obj.has_berries !== undefined) {
+          marker.on('click', async () => {
+            const res = await fetch(`/gather?tree_id=${obj.id}`, { method: 'POST' });
+            const data = await res.json();
+            alert(data.message);
+            location.reload();
+          });
+        }
+      }
+    }
+
+    loadObjects();
+  </script>
+</body>
+</html>
