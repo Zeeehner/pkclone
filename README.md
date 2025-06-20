@@ -1,36 +1,40 @@
-# PKClone – Parallel Kingdom Klon
+# PKClone – Parallel Kingdom Clone
 
-Ein minimalistisches Multiplayer-RPG basierend auf OpenStreetMap und FastAPI.
+A minimalist multiplayer RPG inspired by Parallel Kingdom, built with OpenStreetMap and FastAPI.
 
 ## Features
 
-- 🗺️ Karte mit Leaflet und Echtzeit-Objekten
-- 🧙 Spieler mit EXP, Angriff & Levelsystem
-- 🐺 Monster bekämpfen
-- 🌳 Bäume mit Beeren sammeln
-- 🔌 REST-API (FastAPI)
+- 🗺️ Live map using Leaflet and real-time object rendering
+- 🧙 Player system with XP, attack, and leveling
+- 🐺 Combat system for monsters
+- 🌳 Resource gathering (trees, berries)
+- 🔌 REST API (FastAPI backend)
 
-## Projektstruktur
+## Project Structure
 
 ```
 .
-├── main.py              # FastAPI Backend
-├── game_objects.py      # Entity-, Player-, Monster-, Tree-Klassen
+├── main.py              # FastAPI backend entry point
+├── game_objects.py      # Core classes for Player, Monster, Tree
 ├── static/
-│   └── game.html        # Leaflet-Karte mit JS-Interaktion
+│   └── game.html        # Leaflet map and JS interactions
 ```
 
 ## Setup
 
-```bash
+```
 python -m venv venv
 source venv/bin/activate
 pip install fastapi uvicorn
 uvicorn main:app --reload
 ```
 
-Öffne dann im Browser: `http://localhost:8000`
+Then open in your browser: `http://localhost:8000`
 
-## Lizenz
+## Disclaimer & License
 
-MIT License – feel free to build your own Kingdom.
+This is a fan-made, non-commercial educational project.  
+It is **not affiliated with or endorsed by PerBlue**.  
+All game concepts, names, and trademarks mentioned belong to their respective owners.
+
+Source code is licensed under the [MIT License](LICENSE).
