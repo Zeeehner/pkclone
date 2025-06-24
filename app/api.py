@@ -1,15 +1,17 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from app.db import get_db
-from app.models import Player, Mob, Flag, City, Structure, GroundItem
+from app.models import Player, Mob, Flag, Structure, GroundItem, PlayerItem
 from pydantic import BaseModel
 from typing import List, Optional
+from app.schemas import PlayerOut
+
 
 router = APIRouter()
 
 # Beispiel-Schema
 class PlayerCreate(BaseModel):
-    name: str
+    user_id: str
     avatar: int = 0
     gold: int = 100
     lat: float
@@ -19,6 +21,8 @@ class PlayerCreate(BaseModel):
 @router.post("/players", response_model=dict)
 def create_player(player: PlayerCreate, db: Session = Depends(get_db)):
     db_player = Player(
+        user_id=player.user_id,
+        name=player.user_id,
         avatar=player.avatar,
         gold=player.gold,
         lat=player.lat,
@@ -34,11 +38,11 @@ def create_player(player: PlayerCreate, db: Session = Depends(get_db)):
     db.refresh(db_player)
     return {"id": db_player.id}
 
-@router.get("/players", response_model=List[dict])
+@router.get("/players", response_model=List[PlayerOut])
 def list_players(db: Session = Depends(get_db)):
     return db.query(Player).all()
 
-@router.get("/players/{player_id}")
+@router.get("/players/{player_id}", response_model=PlayerOut)
 def get_player(player_id: str, db: Session = Depends(get_db)):
     player = db.query(Player).get(player_id)
     if not player:
@@ -55,9 +59,9 @@ def list_mobs(db: Session = Depends(get_db)):
 def list_flags(db: Session = Depends(get_db)):
     return db.query(Flag).all()
 
-@router.get("/cities", response_model=List[dict])
-def list_cities(db: Session = Depends(get_db)):
-    return db.query(City).all()
+# @router.get("/cities", response_model=List[dict])
+# def list_cities(db: Session = Depends(get_db)):
+#     return db.query(City).all()
 
 @router.get("/structures", response_model=List[dict])
 def list_structures(db: Session = Depends(get_db)):

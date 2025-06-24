@@ -15,7 +15,6 @@ class BaseModel(Base):
     created_at = Column(DateTime, default=datetime.datetime.now)
     updated_at = Column(DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
 
-
 class ItemModel(BaseModel):
     __abstract__ = True
     tag = Column(Integer)
@@ -33,11 +32,10 @@ class LivingEntity(BaseModel):
 # Entities
 class Player(LivingEntity):
     __tablename__ = "players"
-
-    user_id = Column(String, nullable=True)  # Replace with ForeignKey to your user table
-    city_id = Column(String, ForeignKey("cities.id"), nullable=True)
-    clan_id = Column(String, ForeignKey("clans.id"), nullable=True)
-
+    user_id = Column(String, nullable=False, unique=True)
+    # city_id = Column(String, ForeignKey("cities.id"), nullable=True)
+    # clan_id = Column(String, ForeignKey("clans.id"), nullable=True)
+    name = Column(String, nullable=False)
     avatar = Column(Integer)
     gold = Column(Integer)
 
@@ -47,8 +45,8 @@ class Player(LivingEntity):
     status = Column(String(64))
     bio = Column(String(256))
 
-    city = relationship("City", back_populates="members", foreign_keys=[city_id])
-    clan = relationship("Clan", back_populates="members", foreign_keys=[clan_id])
+    # city = relationship("City", back_populates="members", foreign_keys=[city_id])
+    # clan = relationship("Clan", back_populates="members", foreign_keys=[clan_id])
 
 
 
@@ -88,64 +86,64 @@ class Flag(PlayerStructure):
     fee = Column(Integer)
 
 
-class City(PlayerStructure):
-    __tablename__ = "cities"
-    id = Column(String, ForeignKey("player_structures.id"), primary_key=True)
-    major_id = Column(String, ForeignKey("players.id"))
-    name = Column(String(32))
+# class City(PlayerStructure):
+#     __tablename__ = "cities"
+#     id = Column(String, ForeignKey("player_structures.id"), primary_key=True)
+#     major_id = Column(String, ForeignKey("players.id"))
+#     name = Column(String(32))
 
-    major = relationship("Player", foreign_keys=[major_id], backref="lead_cities")
-    members = relationship("Player", back_populates="city", foreign_keys=[Player.city_id])
-
-
-class TradePost(PlayerStructure):
-    __tablename__ = "tradeposts"
-    id = Column(String, ForeignKey("player_structures.id"), primary_key=True)
-    corresponding_city_id = Column(String, ForeignKey("cities.id"))
-    corresponding_city = relationship("City", backref="city2")
+#     major = relationship("Player", foreign_keys=[major_id], backref="lead_cities")
+#     members = relationship("Player", back_populates="city", foreign_keys=[Player.city_id])
 
 
-class CityFlag(Structure):
-    __tablename__ = "city_flags"
-    id = Column(String, ForeignKey("structures.id"), primary_key=True)
-    city_id = Column(String, ForeignKey("cities.id"))
-    level = Column(Integer)
+# class TradePost(PlayerStructure):
+#     __tablename__ = "tradeposts"
+#     id = Column(String, ForeignKey("player_structures.id"), primary_key=True)
+#     corresponding_city_id = Column(String, ForeignKey("cities.id"))
+#     corresponding_city = relationship("City", backref="city2")
 
 
-class Library(PlayerStructure):
-    __tablename__ = "libraries"
-    id = Column(String, ForeignKey("player_structures.id"), primary_key=True)
-    fee = Column(Integer)
-    skill = Column(Integer)
-    level = Column(Integer)
+# class CityFlag(Structure):
+#     __tablename__ = "city_flags"
+#     id = Column(String, ForeignKey("structures.id"), primary_key=True)
+#     city_id = Column(String, ForeignKey("cities.id"))
+#     level = Column(Integer)
 
 
-# Relationen
-class FlagPass(BaseModel):
-    __tablename__ = "flag_passes"
-    builder_id = Column(String, ForeignKey("players.id"))
-    license_id = Column(String, ForeignKey("players.id"))
+# class Library(PlayerStructure):
+#     __tablename__ = "libraries"
+#     id = Column(String, ForeignKey("player_structures.id"), primary_key=True)
+#     fee = Column(Integer)
+#     skill = Column(Integer)
+#     level = Column(Integer)
 
 
-class Clan(BaseModel):
-    __tablename__ = "clans"
-    leader_id = Column(String, ForeignKey("players.id"))
-    name = Column(String(32))
-    members = relationship("Player", back_populates="clan", foreign_keys=[Player.clan_id])
+# # Relationen
+# class FlagPass(BaseModel):
+#     __tablename__ = "flag_passes"
+#     builder_id = Column(String, ForeignKey("players.id"))
+#     license_id = Column(String, ForeignKey("players.id"))
+
+
+# class Clan(BaseModel):
+#     __tablename__ = "clans"
+#     leader_id = Column(String, ForeignKey("players.id"))
+#     name = Column(String(32))
+#     members = relationship("Player", back_populates="clan", foreign_keys=[Player.clan_id])
 
 
 
-class Skill(BaseModel):
-    __tablename__ = "skills"
-    player_id = Column(String, ForeignKey("players.id"))
-    tag = Column(Integer)
-    transient_exp = Column(Integer)
-    total_exp = Column(Integer)
+# class Skill(BaseModel):
+#     __tablename__ = "skills"
+#     player_id = Column(String, ForeignKey("players.id"))
+#     tag = Column(Integer)
+#     transient_exp = Column(Integer)
+#     total_exp = Column(Integer)
 
 
-class TradePostListing(ItemModel):
-    __tablename__ = "tradepost_listings"
-    tradepost_id = Column(String, ForeignKey("tradeposts.id"))
+# class TradePostListing(ItemModel):
+#     __tablename__ = "tradepost_listings"
+#     tradepost_id = Column(String, ForeignKey("tradeposts.id"))
 
 
 class PlayerItem(ItemModel):
