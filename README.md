@@ -10,15 +10,6 @@ A minimalist multiplayer RPG inspired by Parallel Kingdom, built with OpenStreet
 - 🌳 Resource gathering (trees, berries)
 - 🔌 REST API (FastAPI backend)
 
-## Project Structure
-
-```
-.
-├── main.py              # FastAPI backend entry point
-├── game_objects.py      # Core classes for Player, Monster, Tree
-├── static/
-│   └── game.html        # Leaflet map and JS interactions
-```
 
 ## Setup
 
