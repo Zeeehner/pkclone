@@ -49,7 +49,6 @@ class Player(LivingEntity):
 
     city = relationship("City", back_populates="members", foreign_keys=[city_id])
     clan = relationship("Clan", back_populates="members", foreign_keys=[clan_id])
-    clan = relationship("Clan", back_populates="members", foreign_keys=[clan_id])
 
 
 
@@ -96,7 +95,7 @@ class City(PlayerStructure):
     name = Column(String(32))
 
     major = relationship("Player", foreign_keys=[major_id], backref="lead_cities")
-    members = relationship("Player", back_populates="city",  foreign_keys="[Player.city_id]")
+    members = relationship("Player", back_populates="city", foreign_keys=[Player.city_id])
 
 
 class TradePost(PlayerStructure):
@@ -132,7 +131,7 @@ class Clan(BaseModel):
     __tablename__ = "clans"
     leader_id = Column(String, ForeignKey("players.id"))
     name = Column(String(32))
-    members = relationship("Player", back_populates="clan", foreign_keys="[Player.clan_id]")
+    members = relationship("Player", back_populates="clan", foreign_keys=[Player.clan_id])
 
 
 
